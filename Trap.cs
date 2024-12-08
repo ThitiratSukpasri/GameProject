@@ -31,7 +31,10 @@ namespace Game09
             if (objB.Parent is Girl girl)
             {
                 Console.WriteLine("Girl has collided with the trap.");
-                girl.Die(); // Call the method to handle the collision
+                //girl.Die(); // Call the method to handle the collision
+                girl.Collect();
+                this.Detach();
+                Game09.ScoreCounter++;
             }
         }
     }

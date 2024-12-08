@@ -20,8 +20,11 @@ namespace Game09
         private GameState currentState = GameState.Playing;
         private Girl girl;
         private Text gameText;
+        private Text scoreText; // Text object to display the score
         private Placeholder gamePlaceholder = new Placeholder();
         private Vector2 screenSize = new Vector2(1920, 1080); // Adjust as necessary
+        public static int ScoreCounter { get; set; } = 0;
+
 
         protected override void LoadContent()
         {
@@ -33,6 +36,10 @@ namespace Game09
             girl = new Girl(this, new Vector2(ScreenSize.X / 2, 0));
             All.Add(girl);
             girl.Add(new CameraMan(Camera, ScreenSize));
+
+            scoreText = new Text("resource/FiraCodeNerdFontMono.ttf", 40, Color.White, "Score: 0");
+            scoreText.Position = new Vector2(20, 20); // Top-left corner
+            All.Add(scoreText);
 
             // Add other game elements
             CreateRandomBricks();
@@ -78,6 +85,7 @@ namespace Game09
                 }
                 return; // Skip base update when the game is over
             }
+            scoreText.Str = $"Score: {ScoreCounter}";
 
             base.Update(gameTime); // Call the base update when the game is playing
         }
@@ -113,22 +121,17 @@ namespace Game09
 
             //gameText.Position = new Vector2(ScreenSize.X-215, ScreenSize.Y-110);
 
-            gameText.Position = new Vector2(Position.X-155, Position.Y-150);
+            gameText.Position = new Vector2(Position.X - 155, Position.Y - 150);
             All.Add(gameText);
+        }
+        public void SetScore(Vector2 Position)
+        {
+            //currentState = GameState.GameOver;
 
-           /*var panel = new Panel(new Vector2(ScreenSize.X*2, ScreenSize.Y),
-                                  Color.LavenderBlush, Color.LightGoldenrodYellow, 10)
-            {
-                //Position = new Vector2(0, ScreenSize.Y / 4)
-                Position = new Vector2(ScreenSize.X - 215, ScreenSize.Y - 110) // Adjust vertical offset
-
-            };
-
-            panel.AddChild(gameText);
-
-            All.Add(panel);
-            gamePlaceholder.Add(panel);
-            All.Add(gamePlaceholder);*/
+            //scoreText = new Text("resource/FiraCodeNerdFontMono.ttf", 40, Color.White, "Score: 0");
+            scoreText.Position = new Vector2(Position.X - 700, Position.Y - 550);
+            scoreText.Str = $"Score: {ScoreCounter}";
+            All.Add(scoreText);
         }
     }
 }

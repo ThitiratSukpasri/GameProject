@@ -12,6 +12,8 @@ namespace Game09
         Vector2 V;
         bool onFloor;
         bool isStopped;
+        private float speedMultiplier = 1f; // Default to normal speed
+        private float EffectDuration = 0f; // Remaining time for the slow effect
 
         // Constructor now takes a Game09 instance and position
         public Girl(Game09 game, Vector2 position)
@@ -75,10 +77,20 @@ namespace Game09
             if (isStopped)
                 return; // Stop movement if the girl has collided with a trap
 
+            if (EffectDuration > 0)
+            {
+                   EffectDuration -= deltaTime;
+                if (EffectDuration <= 0)
+                {
+                    speedMultiplier = 1f; // Reset speed multiplier
+                    Console.WriteLine("The slow effect has ended.");
+                }
+            }
             ChangeVy(deltaTime);
 
             var direction = DirectionKey.Direction;
-            V.X = direction.X * 500; // Change only V.X
+            //V.X = direction.X * 500; // Change only V.X
+            V.X = direction.X * 500 * speedMultiplier; // Apply the speed multiplier
 
             if (direction.X > 0)
                 states.Animate(2);
@@ -87,7 +99,7 @@ namespace Game09
             else
                 states.Animate(0);
 
-          
+
             base.Act(deltaTime);
             Position += V * deltaTime; // Update position based on velocity
             onFloor = false;
@@ -129,6 +141,35 @@ namespace Game09
 
             // Notify the main game class about the game over
             mainGame.SetGameOver(Position); // Call SetGameOver method to handle game over state
+        }
+        public void Collect()
+        {
+            Random random = new Random();
+
+        // Generate a random integer to decide the effect
+        int effect = random.Next(3); // 0 = bigger, 1 = smaller, 2 = slower
+
+            if (effect == 0)
+            {
+                speedMultiplier = 2f; // Reduce speed to half
+                EffectDuration = 3f; // Slow effect lasts for 3 seconds
+                Console.WriteLine("The girl has become faster!");
+
+            }
+            else if (effect == 1)
+            {
+                // Make the girl smaller
+                Scale /= 2;
+                Console.WriteLine("The girl has become smaller!");
+            }
+            else if (effect == 2)
+            {
+                // Make the girl slower
+                speedMultiplier = 0.5f; // Reduce speed to half
+                EffectDuration = 3f; // Slow effect lasts for 3 seconds
+
+                Console.WriteLine("The girl has become slower!");
+            }
         }
 
     }
