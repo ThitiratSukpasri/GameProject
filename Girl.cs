@@ -36,7 +36,7 @@ namespace Game09
 
             var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(0.3f, 1), 1);
             collisionObj.OnCollide = OnCollide;
-            collisionObj.DebugDraw = false;
+            collisionObj.DebugDraw = true;
             Add(collisionObj);
 
         }
@@ -146,8 +146,8 @@ namespace Game09
         {
             Random random = new Random();
 
-        // Generate a random integer to decide the effect
-        int effect = random.Next(3); // 0 = bigger, 1 = smaller, 2 = slower
+            // Generate a random integer to decide the effect
+            int effect = random.Next(3); // 0 = bigger, 1 = smaller, 2 = slower
 
             if (effect == 0)
             {
@@ -158,19 +158,19 @@ namespace Game09
             }
             else if (effect == 1)
             {
-                // Make the girl smaller
-                Scale /= 2;
-                Console.WriteLine("The girl has become smaller!");
-            }
-            else if (effect == 2)
-            {
                 // Make the girl slower
                 speedMultiplier = 0.5f; // Reduce speed to half
                 EffectDuration = 3f; // Slow effect lasts for 3 seconds
 
                 Console.WriteLine("The girl has become slower!");
             }
+           
         }
+        
+        public void Checkpoint()
+        {
+            mainGame.LoadNewStage();
 
+        }
     }
 }

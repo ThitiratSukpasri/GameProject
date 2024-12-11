@@ -23,9 +23,12 @@ namespace Game09
             // Initially, the trap is invisible
             isVisible = false;
 
-            // Set up collision detection
-            var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(0.1f, 1), 2);
+            // Set up collision detection      
+
+            var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(1, 0.2f), 2);
             collisionObj.OnCollide = OnCollide; // Define what happens on collision
+            collisionObj.DebugDraw = true;
+
             Add(collisionObj);
         }
 

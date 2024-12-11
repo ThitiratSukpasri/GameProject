@@ -15,7 +15,7 @@ namespace ThanaNita.MonoGameTnt
         private bool needUpdateMatrix = true;
         private bool needUpdateReverse = true;
         private Matrix3 matrix;
-        //private Matrix reverseMatrix;
+        private Matrix reverseMatrix;
 
         public Transformable(Vector2 position, float rotation, Vector2 scale, Vector2 origin)
         {

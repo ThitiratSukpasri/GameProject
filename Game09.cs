@@ -1,4 +1,4 @@
-﻿using Game11;
+﻿//using Game11;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,10 +20,9 @@ namespace Game09
         private GameState currentState = GameState.Playing;
         private Girl girl;
         private Text gameText;
-        private Text scoreText; // Text object to display the score
-        private Placeholder gamePlaceholder = new Placeholder();
         private Vector2 screenSize = new Vector2(1920, 1080); // Adjust as necessary
         public static int ScoreCounter { get; set; } = 0;
+        
 
 
         protected override void LoadContent()
@@ -37,14 +36,12 @@ namespace Game09
             All.Add(girl);
             girl.Add(new CameraMan(Camera, ScreenSize));
 
-            scoreText = new Text("resource/FiraCodeNerdFontMono.ttf", 40, Color.White, "Score: 0");
-            scoreText.Position = new Vector2(20, 20); // Top-left corner
-            All.Add(scoreText);
 
             // Add other game elements
             CreateRandomBricks();
             CreateTraps();
             CreateInvisibleTrap();
+            Checkpoint();
         }
 
         private void CreateInvisibleTrap()
@@ -52,7 +49,7 @@ namespace Game09
             var Vtraps = new (Vector2 position, int textureIndex)[]
             {
                 (new Vector2(770, 550), 1),
-                (new Vector2(2300, 50), 1),
+                (new Vector2(2300, 50), 1)
             };
 
             foreach (var trapData in Vtraps)
@@ -85,8 +82,7 @@ namespace Game09
                 }
                 return; // Skip base update when the game is over
             }
-            scoreText.Str = $"Score: {ScoreCounter}";
-
+            //scoreText.Str = $"Score: {ScoreCounter}";
             base.Update(gameTime); // Call the base update when the game is playing
         }
 
@@ -104,6 +100,8 @@ namespace Game09
             var traps = new (Vector2 position, int textureIndex)[]
             {
                 (new Vector2(1100, 550), 3),
+                //(new Vector2(2700, 50), 3)
+
             };
 
             foreach (var trapData in traps)
@@ -112,26 +110,51 @@ namespace Game09
                 All.Add(trap);
             }
         }
+        private void Checkpoint()
+        {
+            var traps = new (Vector2 position, int textureIndex)[]
+           {
+                (new Vector2(2700, 50), 3)
 
+           };
+
+            foreach (var trapData in traps)
+            {
+                var Checkpoint = new Checkpoint(trapData.position, trapData.textureIndex);
+                All.Add(Checkpoint);
+            }
+        }
+       
+    
         public void SetGameOver(Vector2 Position)
         {
             currentState = GameState.GameOver;
 
             gameText = new Text("resource/FiraCodeNerdFontMono.ttf", 80, Color.Blue, "Game Over");
 
-            //gameText.Position = new Vector2(ScreenSize.X-215, ScreenSize.Y-110);
-
             gameText.Position = new Vector2(Position.X - 155, Position.Y - 150);
             All.Add(gameText);
         }
-        public void SetScore(Vector2 Position)
-        {
-            //currentState = GameState.GameOver;
 
-            //scoreText = new Text("resource/FiraCodeNerdFontMono.ttf", 40, Color.White, "Score: 0");
-            scoreText.Position = new Vector2(Position.X - 700, Position.Y - 550);
-            scoreText.Str = $"Score: {ScoreCounter}";
-            All.Add(scoreText);
+
+        public void LoadNewStage()
+        {
+            Console.WriteLine("Transitioning to the new stage...");
+
+            // Clear current stage objects
+            All.Clear();
+
+            // Example: Load new objects, traps, and elements for the new stage
+            All.Add(new Brick(new RectF(0, 600, 1000, 96))); // Add new bricks
+            All.Add(new Trap(new Vector2(500, 550), 1)); // Add new traps
+            girl.Position = new Vector2(100, 500); // Reset the girl's position
+            All.Add(girl); // Re-add the girl to the new stage
+
+            // Optionally, load assets or configurations specific to the new stage
+            Console.WriteLine("New stage loaded!");
+
         }
     }
+    
+
 }
