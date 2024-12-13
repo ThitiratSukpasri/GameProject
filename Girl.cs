@@ -109,7 +109,7 @@ namespace Game09
         private void CheckFall()
         {
             // Check if the girl's position exceeds 1000
-            if (Position.Y > 1200)
+            if (Position.Y > 2000)
             {
                 Die(); // Call the Die method if she falls off the platform
             }

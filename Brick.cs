@@ -12,8 +12,8 @@ namespace Game09
     {
         public Brick(RectF rect)
         {
-            var texture = TextureCache.Get("test.png");
-            SetTextureRegion(new TextureRegion(texture,new RectF(Vector2.Zero,rect.Size)));
+            var texture = TextureCache.Get("brick2resize.png");
+            SetTextureRegion(new TextureRegion(texture, new RectF(Vector2.Zero,rect.Size)));
             Position = rect.Position;
             var collisionObj = CollisionObj.CreateWithRect(this, 2);
             //collisionObj.Debug = true;

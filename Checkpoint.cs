@@ -15,9 +15,9 @@ namespace Game09
 
             // Load trap texture based on the provided index
             var texture = TextureCache.Get($"trap_{textureIndex}.png");
-            SetTextureRegion(new TextureRegion(texture, new RectF(Vector2.Zero, new Vector2(60, 60))));
+            SetTextureRegion(new TextureRegion(texture, new RectF(Vector2.Zero, new Vector2(98, 104))));
 
-            var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(0.5f, 1), 2);
+            var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(1, 1), 2);
             collisionObj.OnCollide = OnCollide;
             Add(collisionObj);
         }
