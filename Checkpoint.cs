@@ -7,11 +7,13 @@ namespace Game09
 {
     public class Checkpoint : SpriteActor
     {
+        private int textureindex;
         public Checkpoint(Vector2 position, int textureIndex) : base()
         {
             Position = position;
             Origin = new Vector2(30, 30);
             Scale = new Vector2(1.0f, 1.0f);
+            textureindex = textureIndex;
 
             // Load trap texture based on the provided index
             var texture = TextureCache.Get($"trap_{textureIndex}.png");

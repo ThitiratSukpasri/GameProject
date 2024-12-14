@@ -147,11 +147,11 @@ namespace Game09
             Random random = new Random();
 
             // Generate a random integer to decide the effect
-            int effect = random.Next(3); // 0 = bigger, 1 = smaller, 2 = slower
+            int effect = random.Next(2); 
 
             if (effect == 0)
             {
-                speedMultiplier = 2f; // Reduce speed to half
+                speedMultiplier = 1.5f; // Increase speed 
                 EffectDuration = 3f; // Slow effect lasts for 3 seconds
                 Console.WriteLine("The girl has become faster!");
 
@@ -169,6 +169,11 @@ namespace Game09
         
         public void Checkpoint()
         {
+            /*if(mainGame.GameState == Playing)
+            {
+                mainGame.LoadNewStage();
+            }*/
+            
             mainGame.LoadNewStage();
 
         }

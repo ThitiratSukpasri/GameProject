@@ -17,6 +17,7 @@ namespace Game09
 
     public class Game09 : Game2D
     {
+        //private GameState currentState = GameState.Stage1;
         private GameState currentState = GameState.Playing;
         private Girl girl;
         private Text gameText;
@@ -50,11 +51,13 @@ namespace Game09
         {
             var Vtraps = new (Vector2 position, int textureIndex)[]
             {
-                (new Vector2(770, 550), 1),
-                (new Vector2(2300, 50), 1),
-                (new Vector2(1210, 360), 1),
-                (new Vector2(2300, 900), 1), //trap step down stage2
-                (new Vector2(2980,800), 1) //trap step down stage2
+                (new Vector2(770, 550), 1), // trap stage1,2
+                (new Vector2(2300, 50), 4), //trap stage1
+                (new Vector2(1210, 360), 1), // trap stage1,2
+                (new Vector2(2300, 500), 1), //trap step down stage2 
+                (new Vector2(2300, 850), 4), //trap platfrom
+                (new Vector2(2980,800), 4) //trap step down stage2 above head trap
+
             };
 
             foreach (var trapData in Vtraps)
@@ -74,7 +77,7 @@ namespace Game09
                 new RectF(new Vector2(1000, 320), new Vector2(100, 48)),
                 new RectF(new Vector2(1200, 400), new Vector2(100, 48)),
                 new RectF(new Vector2(1700, 350), new Vector2(200, 30)),
-                new RectF(new Vector2(2200, 100), new Vector2(1000, 48))
+                new RectF(new Vector2(2200, 30), new Vector2(1000, 48)) //last long
             };
 
             foreach (var rect in brickData)
@@ -109,6 +112,16 @@ namespace Game09
         {
             girl.Reset();
             currentState = GameState.Playing;
+            /*if (currentState == GameState.Stage1)
+            {
+                All.Clear();
+                LoadContent();
+            }
+            else if (currentState == GameState.Stage2)
+            {
+                All.Clear();
+                LoadNewStage();
+            }*/
 
             All.Clear();
             LoadContent();
@@ -118,8 +131,11 @@ namespace Game09
         {
             var traps = new (Vector2 position, int textureIndex)[]
             {
-                (new Vector2(1100, 550), 3),
-                (new Vector2(3624,1050), 3),
+                (new Vector2(1100, 550), 7), //apple stage 1
+                (new Vector2(3624,1050), 7),
+                (new Vector2(2300, -30), 4), //trap stage1 tree
+
+
                 //(new Vector2(3700,1100), 3) 
             };
 
@@ -133,7 +149,8 @@ namespace Game09
         {
             var traps = new (Vector2 position, int textureIndex)[]
            {
-                (new Vector2(3000,40), 2)
+                (new Vector2(3000,-40), 2),
+                (new Vector2(4400,910), 2)
 
            };
 
@@ -169,15 +186,15 @@ namespace Game09
 
             var brickData = new RectF[]  // Array of RectF to define position and size
             {
-                new RectF(new Vector2(0, 600), new Vector2(1800, 96)),  // Position (x, y) and Size (width, height)
-                new RectF(new Vector2(800, 400), new Vector2(100, 48)), //step up
-                new RectF(new Vector2(1200, 400), new Vector2(100, 48)),//step up2
-                new RectF(new Vector2(1900, 800), new Vector2(100, 48)),//step down
-                new RectF(new Vector2(2100, 900), new Vector2(600,96)), //step down2
-                new RectF(new Vector2(2900, 1000), new Vector2(100,48)), //step down 3 // trap
-                new RectF(new Vector2(3100, 1200), new Vector2(552,96)),//step down 4 x = 600
+                new RectF(new Vector2(-50, 600), new Vector2(1200, 96)),  // Position (x, y) and Size (width, height) //-50
+                new RectF(new Vector2(750, 400), new Vector2(100, 48)), //step up 800
+                new RectF(new Vector2(1150, 400), new Vector2(100, 48)),//step up2 1200
+                new RectF(new Vector2(1300, 960), new Vector2(600, 48)),//step down 
+                new RectF(new Vector2(2100, 900), new Vector2(600,96)), //platform //chirstmast
+                new RectF(new Vector2(2900, 1000), new Vector2(100,48)), //step down 3 // over head trap
+                new RectF(new Vector2(3100, 1200), new Vector2(552,96)),//step down near small wall
                 new RectF(new Vector2(3600, 1104), new Vector2(48,96)), //small wall
-                new RectF(new Vector2(3780, 980), new Vector2(720,48)), //step up long
+                new RectF(new Vector2(3780, 980), new Vector2(720,48)) //step3 up long
             };
             foreach (var rect in brickData)
             {
@@ -185,7 +202,7 @@ namespace Game09
                 All.Add(brick);  // Add the brick to the game world
             }
             All.Add(new Block(new RectF(3660, 835, 48, 48))); //up block
-            All.Add(new Block(new RectF(3650,1200, 120, 50))); // down block
+            All.Add(new Block(new RectF(3650,1200, 130, 50))); // down block
             girl.Position = new Vector2(100, 500); // Reset the girl's position
             All.Add(girl); // Re-add the girl to the new stage
             // Optionally, load assets or configurations specific to the new stage

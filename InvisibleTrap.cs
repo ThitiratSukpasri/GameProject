@@ -12,20 +12,21 @@ namespace Game09
         {
             Position = position;
             Origin = new Vector2(30, 30); // Adjust origin if necessary
-            Scale = new Vector2(1.0f, 1.0f); // Adjust size as needed
+            Scale = new Vector2(1.5f, 1.5f); // Adjust size as needed
 
             // Load trap texture
             //var texture = TextureCache.Get("trap_1.png"); // Ensure you have this texture in your content
             var texture = TextureCache.Get($"trap_{textureIndex}.png"); // Use texture based on index
-
-            SetTextureRegion(new TextureRegion(texture, new RectF(Vector2.Zero, new Vector2(80, 80)))); // Size based on texture
-
+            
+            
+            //SetTextureRegion(new TextureRegion(texture, new RectF(Vector2.Zero, new Vector2(80, 80)))); // Size based on texture 80*80
+            SetTextureRegion(new TextureRegion(texture, new RectF(new Vector2(0,0), new Vector2(80, 67))));
             // Initially, the trap is invisible
             isVisible = false;
-
+            
             // Set up collision detection      
 
-            var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(1, 0.2f), 2);
+            var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(0.7f, 0.2f), 2); //0.2f
             collisionObj.OnCollide = OnCollide; // Define what happens on collision
             collisionObj.DebugDraw = true;
 
