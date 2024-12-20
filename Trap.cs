@@ -18,7 +18,7 @@ namespace Game09
             // Load trap texture based on the provided index
             var texture = TextureCache.Get($"trap_{textureIndex}.png"); // Use texture based on index
             //SetTextureRegion(new TextureRegion(texture, new RectF(Vector2.Zero, new Vector2(80, 80))));
-            SetTextureRegion(new TextureRegion(texture, new RectF(new Vector2(0, 0), new Vector2(80, 67)))); // Adjust size based on texture
+            SetTextureRegion(new TextureRegion(texture, new RectF(new Vector2(0, 0), new Vector2(80, 80)))); // Adjust size based on texture
 
             // Collision detection setup
             var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(0.5f, 1), 2);
@@ -41,6 +41,11 @@ namespace Game09
                 else if (textureindex == 4)
                 {
                     girl.Die();
+                }
+                else if(textureindex == 2)
+                {
+                    girl.Checkpoint();
+                    this.Detach();
                 }
                 
             }

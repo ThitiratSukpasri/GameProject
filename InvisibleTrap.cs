@@ -28,7 +28,7 @@ namespace Game09
 
             var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(0.7f, 0.2f), 2); //0.2f
             collisionObj.OnCollide = OnCollide; // Define what happens on collision
-            collisionObj.DebugDraw = true;
+            collisionObj.DebugDraw = false;
 
             Add(collisionObj);
         }

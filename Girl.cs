@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using ThanaNita.MonoGameTnt;
+using System.Threading.Tasks;
 
 namespace Game09
 {
@@ -14,31 +17,75 @@ namespace Game09
         bool isStopped;
         private float speedMultiplier = 1f; // Default to normal speed
         private float EffectDuration = 0f; // Remaining time for the slow effect
+        //sound
+        private SoundEffect jumpEffect, gameoverEffect, getEffect, santaEffect, checkpointEffect;
+        private SoundEffectInstance jumpEffectInstance, gameoverEffectInstance, getEffectInstance, santaEffectInstance, checkpointEffectInstance;
+        private float soundEffectVolume = 0.5f;
+
+        private Song backgroundMusic;
 
         // Constructor now takes a Game09 instance and position
         public Girl(Game09 game, Vector2 position)
         {
             mainGame = game; // Assign the passed Game09 instance to the field
 
-            var size = new Vector2(60, 60);
+            //var size = new Vector2(60, 60);
+            var size = new Vector2(60, 60); //60 41
             Position = position;
             Origin = size / 2;
-            Scale = new Vector2(2, 2);
+            Scale = new Vector2(2, 2); //2,2
 
-            var texture = TextureCache.Get("Girl.png");
+            //var texture = TextureCache.Get("Girl.png");
+            var texture = TextureCache.Get("santa_new.png");
             var regions2d = RegionCutter.Cut(texture, size);
             var selector = new RegionSelector(regions2d);
-            var stay = new Animation(this, 1.0f, selector.Select1by1(0, 4));
+            /*var stay = new Animation(this, 1.0f, selector.Select1by1(0, 4));
             var left = new Animation(this, 1.0f, selector.Select(start: 8, count: 8));
-            var right = new Animation(this, 1.0f, selector.Select(start: 16, count: 8));
+            var right = new Animation(this, 1.0f, selector.Select(start: 16, count: 8));*/
+            var stay = new Animation(this, 1.0f, selector.Select1by1(0, 5));
+            var left = new Animation(this, 1.0f, selector.Select(start: 29, count: 6));
+            var right = new Animation(this, 1.0f, selector.Select(start: 6, count: 6));
             states = new AnimationStates(new[] { stay, left, right });
             AddAction(states);
 
-            var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(0.3f, 1), 1);
+            var collisionObj = CollisionObj.CreateWithRect(this, RawRect.CreateAdjusted(0.4f, 1), 1);
             collisionObj.OnCollide = OnCollide;
-            collisionObj.DebugDraw = true;
+            collisionObj.DebugDraw = false;
             Add(collisionObj);
 
+            // โหลด Background Music
+            backgroundMusic = mainGame.Content.Load<Song>(@"sound\background");
+            MediaPlayer.IsRepeating = true; // เล่นซ้ำ
+            MediaPlayer.Volume = 0.3f; // ลดระดับเสียง
+
+
+            santaEffect = mainGame.Content.Load<SoundEffect>(@"sound\santa");//sound santa
+            santaEffectInstance = santaEffect.CreateInstance();
+
+            jumpEffect = mainGame.Content.Load<SoundEffect>(@"sound\jump1");//sound jump
+            jumpEffectInstance = jumpEffect.CreateInstance();
+
+            gameoverEffect = mainGame.Content.Load<SoundEffect>(@"sound\gameover");//gameoverEffect
+            gameoverEffectInstance = gameoverEffect.CreateInstance();
+
+            checkpointEffect = mainGame.Content.Load<SoundEffect>(@"sound\checkpoint");//checkpointEffect
+            checkpointEffectInstance = checkpointEffect.CreateInstance();
+
+
+            getEffect = mainGame.Content.Load<SoundEffect>(@"sound\get");//getEffect
+            getEffectInstance = getEffect.CreateInstance();
+
+            // เล่นเสียง Santa Effect
+            if (santaEffectInstance.State != SoundState.Playing)
+            {
+                santaEffectInstance.Volume = soundEffectVolume;
+                santaEffectInstance.Play();
+            }
+            // เริ่ม Background Music หลังเสียง Santa Effect
+            Task.Delay(2000).ContinueWith(_ =>
+            {
+                MediaPlayer.Play(backgroundMusic);
+            });
         }
 
         // Reset the girl's position to the last checkpoint or initial spawn point
@@ -108,8 +155,8 @@ namespace Game09
         }
         private void CheckFall()
         {
-            // Check if the girl's position exceeds 1000
-            if (Position.Y > 2000)
+            // Check if the girl's position exceeds 2000
+            if (Position.Y > 1400)
             {
                 Die(); // Call the Die method if she falls off the platform
             }
@@ -123,7 +170,14 @@ namespace Game09
             // Jump
             var keyInfo = GlobalKeyboardInfo.Value;
             if (keyInfo.IsKeyPressed(Keys.Space) && onFloor)
+            {
                 V.Y = -750;
+                if (jumpEffectInstance.State != SoundState.Playing)
+                {
+                    jumpEffectInstance.Volume = soundEffectVolume;
+                    jumpEffectInstance.Play(); //sound
+                }
+            }
         }
 
         public void StopAtTrap()
@@ -140,7 +194,14 @@ namespace Game09
             StopAtTrap(); // Stop the girl's movement
 
             // Notify the main game class about the game over
-            mainGame.SetGameOver(Position); // Call SetGameOver method to handle game over state
+            mainGame.SetGameOver(Position,false); // Call SetGameOver method to handle game over state
+            MediaPlayer.Stop();
+            //sound
+            if (gameoverEffectInstance.State != SoundState.Playing)
+            {
+                gameoverEffectInstance.Volume = soundEffectVolume;
+                gameoverEffectInstance.Play(); //sound
+            }
         }
         public void Collect()
         {
@@ -164,18 +225,34 @@ namespace Game09
 
                 Console.WriteLine("The girl has become slower!");
             }
-           
+            if (getEffectInstance.State != SoundState.Playing)
+            {
+                getEffectInstance.Volume = soundEffectVolume;
+                getEffectInstance.Play(); //sound
+            }
+
         }
         
         public void Checkpoint()
         {
-            /*if(mainGame.GameState == Playing)
+            if (checkpointEffectInstance.State != SoundState.Playing)
             {
-                mainGame.LoadNewStage();
-            }*/
-            
-            mainGame.LoadNewStage();
-
+                checkpointEffectInstance.Volume = soundEffectVolume;
+                checkpointEffectInstance.Play();
+            }
+            if (mainGame.currentState == GameState.Stage1)
+            {
+                mainGame.LoadStage2();
+            }
+            else if(mainGame.currentState == GameState.Stage2) 
+            { 
+                mainGame.LoadStage3(); 
+            }
+            else if(mainGame.currentState == GameState.Stage3)
+            {
+                mainGame.SetGameOver(Position,true);
+                MediaPlayer.Stop();
+            }
         }
     }
 }
